@@ -216,9 +216,19 @@ async def main():
     while True:
         try:
             print('𝗥𝗬𝗨𝗞𝗢 𝙎𝘾𝙍𝘼𝙋𝙋𝙀𝙍 iniciando...')
-            await client.start()
+            print("Intentando conectar con Telegram...")
+            
+            # Agregar timeout para evitar colgarse
+            await asyncio.wait_for(client.start(), timeout=60)
             print("Cliente conectado!")
+            
+            print("Iniciando monitoreo de mensajes...")
             await client.run_until_disconnected()
+            
+        except asyncio.TimeoutError:
+            print("[ERROR] Timeout en conexión - posible problema de autenticación")
+            print("Verifica que el archivo de sesión existe o elimina ryuko_scrapper_session.session para crear nueva sesión")
+            await asyncio.sleep(10)
         except Exception as e:
             print(f"[ERROR] Cliente desconectado: {e}")
             await asyncio.sleep(5)
